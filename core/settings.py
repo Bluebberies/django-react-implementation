@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django_vite',
+    'inertia',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'inertia.middleware.InertiaMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -54,7 +57,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / 'templates'], 
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -121,3 +124,32 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+INERTIA_LAYOUT = 'base.html'
+
+# We need this for django form posting
+CSRF_HEADER_NAME = 'HTTP_X_XSRF_TOKEN'
+CSRF_COOKIE_NAME = 'XSRF-TOKEN'
+
+# Where ViteJS assets are built.
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / 'react-app' / 'dist'
+
+# If we should use HMR or not.
+DJANGO_VITE_DEV_MODE = DEBUG
+
+# we need this to get around cors issues
+DJANGO_VITE_DEV_SERVER_HOST = '127.0.0.1'
+
+# this is the default, but I'm leaving this here, so you know what to change if you want to run on a different port
+DJANGO_VITE_PORT = 5173
+
+# Name of our static files' folder (after called python manage.py collectstatic)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Include DJANGO_VITE_ASSETS_PATH into STATICFILES_DIRS to be copied inside
+# when run command python manage.py collectstatic
+# STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    DJANGO_VITE_ASSETS_PATH
+]
